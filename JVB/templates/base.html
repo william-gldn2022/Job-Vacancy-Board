@@ -6,18 +6,20 @@
     <title>Job Vacancy Board</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="p-3 m-0 border-0 bd-example m-0 border-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ url_for('basicSearch') }}">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('basicSearch') }}">
             <img src="/JVB/assets/Logo-Big.PNG">
             Job Vacancy Board
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item {% if request.path == url_for('basicSearch') %}active{% endif %}">
                     <a class="nav-link" href="{{ url_for('basicSearch') }}">Search<span class="sr-only">(current)</span></a>
@@ -32,12 +34,8 @@
                     <a class="nav-link" href="{{ url_for('advertManagement') }}">Advert Management</a>
                 </li>
             </ul>
+          </div>
         </div>
-    </nav>
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
-    
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
+      </nav>
+  </body>
 </html>
