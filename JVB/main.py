@@ -1,27 +1,30 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Blueprint
 from waitress import serve
 from flask_bootstrap import Bootstrap
+
+main = Blueprint('main', __name__)
 
 app = Flask(__name__)
 
 Bootstrap(app)
 
-@app.route('/')
-@app.route('/search-basic')
+@main.route('/')
+@main.route('/search-basic')
 def basicSearch():
     return render_template('search-basic.html')
 
-@app.route('/search-advanced')
+@main.route('/search-advanced')
 def advancedSearch():
     return render_template('search-advanced.html')
 
-@app.route('/user-management')
+@main.route('/user-management')
 def userManagement():
     return render_template('user-management.html')
 
-@app.route('/advert-management')
+@main.route('/advert-management')
 def advertManagement():
     return render_template('advert-management.html')
 
-if __name__ == "__main__":
-    serve(app, host="0.0.0.0", port=5000)
+@main.route('/health', methods=["GET"])
+def healthCheck():
+    return {"Status":"Live"}, 200
