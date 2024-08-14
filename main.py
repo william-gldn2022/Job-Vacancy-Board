@@ -5,29 +5,18 @@ from waitress import serve
 from flask_bootstrap import Bootstrap
 import os
 
-app = Blueprint('app', __name__)
+main = Blueprint('main', __name__)
 
 app = Flask(__name__)
 
 Bootstrap(app)
 
-class Config:
-    SECRET_KEY = 'your_secret_key'
-    BASEDIR = os.path.abspath(os.path.dirname(__file__))
-    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(BASEDIR, "instance/job_vacancy_board.db")}'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-app.config.from_object(Config)
-
-db.init_app(app)
-bcrypt.init_app(app)
-
 ADMIN_PASSWORD = 'makemeadmin'
 
-@app.route('/', methods=['GET', 'POST'])
+@main.route('/', methods=['GET', 'POST'])
 def index():
     if 'user_id' in session:
-        return redirect(url_for('basic_search'))
+        return redirect(url_for('main.basic_search'))
     
     if request.method == 'POST':
         if 'login' in request.form:
@@ -37,7 +26,7 @@ def index():
             if user and bcrypt.check_password_hash(user.password, password):
                 session['user_id'] = user.id
                 session['role'] = user.role
-                return redirect(url_for('basic_search'))
+                return redirect(url_for('main.basic_search'))
             else:
                 flash('Login Failed. Check your username and/or password.')
         elif 'register' in request.form:
@@ -58,11 +47,11 @@ def index():
                 db.session.commit()
                 session['user_id'] = new_user.id
                 session['role'] = new_user.role
-                return redirect(url_for('basic_search'))
+                return redirect(url_for('main.basic_search'))
     
     return render_template('index.html')
 
-@app.route('/basic-search', methods=['GET', 'POST'])
+@main.route('/basic-search', methods=['GET', 'POST'])
 @login_required
 def basic_search():
     if request.method == 'POST':
@@ -72,22 +61,22 @@ def basic_search():
     
     return render_template('basic-search.html')
 
-@app.route('/logout')
+@main.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
-@app.route('/results')
+@main.route('/results')
 @login_required
 def results():
     return render_template('results.html')
 
-@app.route('/user-management')
+@main.route('/user-management')
 @login_required
 def userManagement():
     return render_template('user-management.html')
 
-@app.route('/advert-management')
+@main.route('/advert-management')
 @login_required
 def advertManagement():
     return render_template('advert-management.html')
