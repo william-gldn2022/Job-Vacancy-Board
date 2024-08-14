@@ -5,7 +5,7 @@ from waitress import serve
 from flask_bootstrap import Bootstrap
 import os
 
-main = Blueprint('main', __name__)
+main = Blueprint('app', __name__)
 
 app = Flask(__name__)
 
