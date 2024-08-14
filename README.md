@@ -9,4 +9,4 @@ To run locally:
 - Install requirements
 ```pip install -r requirements.txt ```
 - Run the app
-```python -m flask run --debug```
+```python -m flask --app server --debug run```
