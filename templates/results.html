@@ -1,0 +1,23 @@
+<!-- templates/results.html -->
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <h2>Search Results</h2>
+        {% if jobs %}
+            <ul class="list-group">
+                {% for job in jobs %}
+                    <li class="list-group-item">
+                        <h4>{{ job.role }}</h4>
+                        <p>{{ job.description }}</p>
+                        <p><strong>Location:</strong> {{ job.location }}</p>
+                        <p><strong>Salary:</strong> {{ job.salary }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No jobs found matching your criteria.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

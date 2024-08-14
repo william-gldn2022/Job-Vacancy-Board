@@ -1,0 +1,28 @@
+<!-- templates/basic-search.html -->
+{% extends "layout.html" %}
+{% block content %}
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+<body>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <img src="../static/BigLogo.jpg" alt="Logo" height="130">
+            <form method="post">
+                <div class="input-group">
+                  <input type="text" name="search" class="form-control" placeholder="Search...">
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-secondary">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <p class="text-muted small text-center">
+                Try searching for keywords, job titles, or locations.
+              </p>
+        </div>
+    </div>
+</body>
+
+{% endblock %}

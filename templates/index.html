@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    h4 {text-align: center;}
+</style>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <h4>Welcome! Please login or register for access below!</h4>
+        <h2>Login</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" name="login">Login</button>
+        </form>
+        <hr>
+        <h2>Register</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" class="form-control" name="confirm_password" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select name="role" class="form-control" required>
+                    <option value="Regular User">Regular User</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
+            <div class="form-group" id="admin-password-field" style="display: none;">
+                <label for="admin_password">Admin Password</label>
+                <input type="password" class="form-control" name="admin_password">
+            </div>
+            <button type="submit" class="btn btn-primary" name="register">Register</button>
+        </form>
+        <br>
+    </div>
+</div>
+<script>
+    document.querySelector('select[name="role"]').addEventListener('change', function() {
+        var adminPasswordField = document.getElementById('admin-password-field');
+        if (this.value === 'Admin') {
+            adminPasswordField.style.display = 'block';
+        } else {
+            adminPasswordField.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

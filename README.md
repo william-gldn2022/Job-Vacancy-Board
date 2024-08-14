@@ -3,4 +3,10 @@ A University Assignment Project
 Commits are now signed!
 
 To run locally: 
-```python -m flask --app server --debug run```
+- Make sure you are in a virtual environment.
+```source venv/Scripts/activate```
+- cd to the file location
+- Install requirements
+```pip install -r requirements.txt ```
+- Run the app
+```flask run --debug```
