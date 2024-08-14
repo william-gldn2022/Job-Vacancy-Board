@@ -1,19 +1,22 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, session
-from config import Config
+from flask import Flask, render_template, redirect, url_for, request, flash, session, Blueprint
 from models import db, bcrypt, User, Job
 from decorators import login_required
 from waitress import serve
+from flask_bootstrap import Bootstrap
+import os
 
-def create_app():
-    app = Flask(__name__, static_url_path=f"/static")
-    with app.app_context():
-        from app import app
-        app.register_blueprint(app)
-        return app
-
-from app import create_app
+main = Blueprint('main', __name__)
 
 app = Flask(__name__)
+
+Bootstrap(app)
+
+class Config:
+    SECRET_KEY = 'your_secret_key'
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
+    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(BASEDIR, "instance/job_vacancy_board.db")}'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 app.config.from_object(Config)
 
 db.init_app(app)
@@ -89,7 +92,3 @@ def userManagement():
 def advertManagement():
     return render_template('advert-management.html')
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    serve(create_app(), host="0.0.0.0", port=5000)
