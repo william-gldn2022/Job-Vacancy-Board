@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from config import Config
 from models import db, bcrypt, User, Job
@@ -8,8 +7,8 @@ from waitress import serve
 def create_app():
     app = Flask(__name__, static_url_path=f"/static")
     with app.app_context():
-        from app import main
-        app.register_blueprint(main)
+        from app import app
+        app.register_blueprint(app)
         return app
 
 from app import create_app
