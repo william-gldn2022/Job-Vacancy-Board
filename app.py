@@ -3,6 +3,16 @@ from flask import Flask, render_template, redirect, url_for, request, flash, ses
 from config import Config
 from models import db, bcrypt, User, Job
 from decorators import login_required
+from waitress import serve
+
+def create_app():
+    app = Flask(__name__, static_url_path=f"/static")
+    with app.app_context():
+        from app import main
+        app.register_blueprint(main)
+        return app
+
+from app import create_app
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -83,4 +93,4 @@ def advertManagement():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    serve(create_app(), host="0.0.0.0", port=5000)
