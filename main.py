@@ -93,8 +93,6 @@ def basic_search():
     
     return render_template('basic-search.html')
 
-
-
 @main.route('/logout')
 def logout():
     session.clear()
@@ -120,7 +118,9 @@ def userManagement():
 def advertManagement():
     return render_template('advert-management.html')
 
-
+@main.route('/health', methods=["GET"])
+def health():
+    return {"Status":"Live"}, 200
 
 def search_jobs(search_term='', min_salary=None, max_salary=None, selected_locations=None, selected_grades=None, selected_job_roles=None):
     query = Job.query.filter(
