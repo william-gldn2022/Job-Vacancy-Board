@@ -1,0 +1,49 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* This ensures that the card takes up the full height of its container */
+}
+
+.card-body {
+    position: relative; /* Set the card body as a positioning context for the button */
+    padding-bottom: 50px; /* Add some padding at the bottom to ensure content doesn't overlap with the button */
+}
+
+.card-btn {
+    position: absolute;
+    bottom: 10px;  /* Position 10px from the bottom */
+    right: 10px;   /* Position 10px from the right */
+}
+
+
+.d-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.d-flex .card {
+    height: 100%;
+    margin-bottom: 20px; /* Add some margin to separate the cards */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-lg-6, .col-md-6 {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-column {
+    background-color: #b5babe; /* Light grey background */
+    padding: 15px;
+    border-radius: 5px;
+    height: 655px;
+}
+
+.results-container {
+    padding-left: 5px;
+}

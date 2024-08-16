@@ -4,6 +4,7 @@ from decorators import login_required
 from waitress import serve
 from flask_bootstrap import Bootstrap
 import os
+from sqlalchemy import or_
 
 main = Blueprint('main', __name__)
 
@@ -55,11 +56,44 @@ def index():
 @login_required
 def basic_search():
     if request.method == 'POST':
-        search_term = request.form['search']
-        jobs = Job.query.filter(Job.role.contains(search_term)).all()
-        return render_template('results.html', jobs=jobs)
+        # Collecting search inputs
+        search_term = request.form.get('search', '')
+        min_salary = request.form.get('minSalary', None)
+        max_salary = request.form.get('maxSalary', None)
+        selected_locations = request.form.getlist('locations')
+        selected_grades = request.form.getlist('grades')
+        selected_job_roles = request.form.getlist('jobRoles')
+
+        # Get the query object from the search function
+        jobs_query = search_jobs(
+            search_term=search_term,
+            min_salary=min_salary,
+            max_salary=max_salary,
+            selected_locations=selected_locations,
+            selected_grades=selected_grades,
+            selected_job_roles=selected_job_roles
+        )
+
+        # Create a subquery for further filtering
+        jobs_subquery = jobs_query.with_entities(Job.id).subquery()
+
+        # Calculate counts based on the filtered jobs only
+        location_counts = db.session.query(Job.location, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.location).all()
+        grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.grade).all()
+        job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.jobRole).all()
+
+        # Execute the query to get the actual jobs
+        jobs = jobs_query.all()
+
+        # Render the results page with the filtered jobs and counts
+        return render_template('results.html', jobs=jobs, 
+                               location_counts=location_counts, 
+                               grade_counts=grade_counts, 
+                               job_role_counts=job_role_counts)
     
     return render_template('basic-search.html')
+
+
 
 @main.route('/logout')
 def logout():
@@ -80,4 +114,32 @@ def userManagement():
 @login_required
 def advertManagement():
     return render_template('advert-management.html')
+
+
+
+def search_jobs(search_term='', min_salary=None, max_salary=None, selected_locations=None, selected_grades=None, selected_job_roles=None):
+    query = Job.query.filter(
+        or_(
+            Job.jobRole.contains(search_term),
+            Job.location.contains(search_term),
+            Job.shortDescription.contains(search_term)
+        )
+    )
+
+    if min_salary:
+        query = query.filter(Job.salary >= int(min_salary))
+    if max_salary:
+        query = query.filter(Job.salary <= int(max_salary))
+
+    if selected_locations:
+        query = query.filter(Job.location.in_(selected_locations))
+
+    if selected_grades:
+        query = query.filter(Job.grade.in_(selected_grades))
+
+    if selected_job_roles:
+        query = query.filter(Job.jobRole.in_(selected_job_roles))
+
+    # Return the query object instead of the result set
+    return query
 

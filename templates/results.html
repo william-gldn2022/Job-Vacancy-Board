@@ -1,23 +1,87 @@
-<!-- templates/results.html -->
 {% extends "layout.html" %}
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-8">
-        <h2>Search Results</h2>
-        {% if jobs %}
-            <ul class="list-group">
-                {% for job in jobs %}
-                    <li class="list-group-item">
-                        <h4>{{ job.role }}</h4>
-                        <p>{{ job.description }}</p>
-                        <p><strong>Location:</strong> {{ job.location }}</p>
-                        <p><strong>Salary:</strong> {{ job.salary }}</p>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No jobs found matching your criteria.</p>
-        {% endif %}
+<div class="container-fluid results-container">
+    <div class="row mt-2">
+        <!-- Filter Column -->
+        <div class="col-md-3 filter-column">
+            <h5>Filters</h5>
+            <form method="post">
+                <!-- Salary Filter -->
+                <div class="form-group">
+                    <label for="minSalary">Minimum Salary:</label>
+                    <input type="number" name="minSalary" class="form-control" id="minSalary" placeholder="e.g. 30000">
+                </div>
+                <div class="form-group">
+                    <label for="maxSalary">Maximum Salary:</label>
+                    <input type="number" name="maxSalary" class="form-control" id="maxSalary" placeholder="e.g. 70000">
+                </div>
+                <!-- Location Filter -->
+                <div class="form-group">
+                    <label>Location:</label>
+                    {% for location, count in location_counts %}
+                    <div class="form-check">
+                        <input type="checkbox" name="locations" value="{{ location }}" class="form-check-input" id="loc-{{ loop.index }}">
+                        <label class="form-check-label" for="loc-{{ loop.index }}">
+                            {{ location }} ({{ count }})
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Grade Filter -->
+                <div class="form-group">
+                    <label>Grade:</label>
+                    {% for grade, count in grade_counts %}
+                    <div class="form-check">
+                        <input type="checkbox" name="grades" value="{{ grade }}" class="form-check-input" id="grade-{{ loop.index }}">
+                        <label class="form-check-label" for="grade-{{ loop.index }}">
+                            {{ grade }} ({{ count }})
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Job Role Filter -->
+                <div class="form-group">
+                    <label>Job Role:</label>
+                    {% for role, count in job_role_counts %}
+                    <div class="form-check">
+                        <input type="checkbox" name="jobRoles" value="{{ role }}" class="form-check-input" id="role-{{ loop.index }}">
+                        <label class="form-check-label" for="role-{{ loop.index }}">
+                            {{ role }} ({{ count }})
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </form>
+        </div>
+        <!-- Search Results Column -->
+        <div class="col-md-9">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <h2>Search Results</h2>
+                    {% if jobs %}
+                        <div class="row">
+                            {% for job in jobs %}
+                                <div class="col-lg-6 col-md-6 d-flex align-items-stretch mb-4">
+                                    <div class="card">
+                                        <h5 class="card-header">{{ job.jobRole }}</h5>
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ job.shortDescription }}</h5>
+                                            <p class="card-text"><strong>Grade:</strong> {{ job.grade }}</p>
+                                            <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
+                                            <p class="card-text"><strong>Salary:</strong> £{{ job.salary }}</p>
+                                            <a href="#" class="btn btn-primary card-btn">Go somewhere</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No jobs found matching your criteria.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
