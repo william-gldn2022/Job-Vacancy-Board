@@ -13,7 +13,11 @@ class User(db.Model):
 
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    role = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(500), nullable=False)
-    salary = db.Column(db.String(50), nullable=False)
-    location = db.Column(db.String(100), nullable=False)
+    jobRole = db.Column(db.String(100), nullable=False)
+    shortDescription = db.Column(db.String(100), nullable=False)
+    longDescription = db.Column(db.String(500), nullable=False)
+    salary = db.Column(db.Integer, nullable=False)
+    location = db.Column(db.String(50), nullable=False)
+    grade = db.Column(db.String(20), nullable=False)
+    
+

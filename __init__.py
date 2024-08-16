@@ -1,6 +1,7 @@
 from flask import Flask
 from models import db, bcrypt
 import os
+from flask_migrate import Migrate
 
 class Config:
     SECRET_KEY = 'your_secret_key'
@@ -16,4 +17,5 @@ def create_app():
         app.config.from_object(Config)
         db.init_app(app)
         bcrypt.init_app(app)
+        migrate = Migrate(app, db)
         return app
