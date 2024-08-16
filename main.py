@@ -103,7 +103,12 @@ def logout():
 @main.route('/results')
 @login_required
 def results():
-    return render_template('results.html')
+    jobs = Job.query.all()
+    location_counts = db.session.query(Job.location, db.func.count(Job.id)).group_by(Job.location).all()
+    grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).group_by(Job.grade).all()
+    job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).group_by(Job.jobRole).all()
+
+    return render_template('results.html', jobs=jobs, location_counts=location_counts, grade_counts=grade_counts, job_role_counts=job_role_counts)
 
 @main.route('/user-management')
 @login_required

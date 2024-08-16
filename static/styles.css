@@ -24,7 +24,7 @@
 
 .d-flex .card {
     height: 100%;
-    margin-bottom: 20px; /* Add some margin to separate the cards */
+    margin-bottom: 2px; /* Add some margin to separate the cards */
 }
 
 .row {
@@ -41,7 +41,7 @@
     background-color: #b5babe; /* Light grey background */
     padding: 15px;
     border-radius: 5px;
-    height: 655px;
+    height: 672px;
 }
 
 .results-container {

@@ -18,6 +18,10 @@
               <p class="text-muted small text-center">
                 Try searching for keywords, job titles, or locations.
               </p>
+              <p class="text-muted small text-right" style="font-style: italic;">
+                Want to see all the jobs on offer? 
+                <a href="{{ url_for('main.results', show_all=True) }}">Click here!</a>
+            </p>
         </div>
     </div>
 </body>
