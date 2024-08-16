@@ -15,41 +15,56 @@
                     <label for="maxSalary">Maximum Salary:</label>
                     <input type="number" name="maxSalary" class="form-control" id="maxSalary" placeholder="e.g. 70000">
                 </div>
+
                 <!-- Location Filter -->
                 <div class="form-group">
                     <label>Location:</label>
-                    {% for location, count in location_counts %}
-                    <div class="form-check">
-                        <input type="checkbox" name="locations" value="{{ location }}" class="form-check-input" id="loc-{{ loop.index }}">
-                        <label class="form-check-label" for="loc-{{ loop.index }}">
-                            {{ location }} ({{ count }})
-                        </label>
-                    </div>
-                    {% endfor %}
+                    {% if location_counts %}
+                        {% for location, count in location_counts %}
+                        <div class="form-check">
+                            <input type="checkbox" name="locations" value="{{ location }}" class="form-check-input" id="loc-{{ loop.index }}">
+                            <label class="form-check-label" for="loc-{{ loop.index }}">
+                                {{ location }} ({{ count }})
+                            </label>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="font-style: italic;">No filter found</p>
+                    {% endif %}
                 </div>
+
                 <!-- Grade Filter -->
                 <div class="form-group">
                     <label>Grade:</label>
-                    {% for grade, count in grade_counts %}
-                    <div class="form-check">
-                        <input type="checkbox" name="grades" value="{{ grade }}" class="form-check-input" id="grade-{{ loop.index }}">
-                        <label class="form-check-label" for="grade-{{ loop.index }}">
-                            {{ grade }} ({{ count }})
-                        </label>
-                    </div>
-                    {% endfor %}
+                    {% if grade_counts %}
+                        {% for grade, count in grade_counts %}
+                        <div class="form-check">
+                            <input type="checkbox" name="grades" value="{{ grade }}" class="form-check-input" id="grade-{{ loop.index }}">
+                            <label class="form-check-label" for="grade-{{ loop.index }}">
+                                {{ grade }} ({{ count }})
+                            </label>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="font-style: italic;">No filter found</p>
+                    {% endif %}
                 </div>
+
                 <!-- Job Role Filter -->
                 <div class="form-group">
                     <label>Job Role:</label>
-                    {% for role, count in job_role_counts %}
-                    <div class="form-check">
-                        <input type="checkbox" name="jobRoles" value="{{ role }}" class="form-check-input" id="role-{{ loop.index }}">
-                        <label class="form-check-label" for="role-{{ loop.index }}">
-                            {{ role }} ({{ count }})
-                        </label>
-                    </div>
-                    {% endfor %}
+                    {% if job_role_counts %}
+                        {% for role, count in job_role_counts %}
+                        <div class="form-check">
+                            <input type="checkbox" name="jobRoles" value="{{ role }}" class="form-check-input" id="role-{{ loop.index }}">
+                            <label class="form-check-label" for="role-{{ loop.index }}">
+                                {{ role }} ({{ count }})
+                            </label>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="font-style: italic;">No filter found</p>
+                    {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
             </form>
