@@ -114,7 +114,11 @@
 
     {% else %}
         <!-- Regular User View -->
-        <h4>Your Details</h4>
+        <p class="text-muted small text-left" style="font-style: italic;"> 
+            As a Regular User, you only have permissions to manage your own password. <br>
+            Please contact an administrator to change your username, to upgrade your account to an Admin account, or to delete your account.
+        </p>
+        <h4>Your Details:</h4>
         <p><strong>Username:</strong> {{ session['username'] }}</p>
         <p><strong>Role:</strong> {{ session['role'] }}</p>
         <button class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
