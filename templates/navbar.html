@@ -28,8 +28,8 @@
             <li class="nav-item {% if request.path == url_for('main.basic_search') %}active{% endif %}">
                 <a class="nav-link" href="{{ url_for('main.basic_search') }}">Search<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item {% if request.path == url_for('main.userManagement') %}active{% endif %}">
-                <a class="nav-link" href="{{ url_for('main.userManagement') }}">User Management</a>
+            <li class="nav-item {% if request.path == url_for('main.user_management') %}active{% endif %}">
+                <a class="nav-link" href="{{ url_for('main.user_management') }}">User Management</a>
             </li>
             <li class="nav-item {% if request.path == url_for('main.advertManagement') %}active{% endif %}">
                 <a class="nav-link" href="{{ url_for('main.advertManagement') }}">Advert Management</a>

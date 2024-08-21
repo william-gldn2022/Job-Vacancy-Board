@@ -27,6 +27,7 @@ def index():
             if user and bcrypt.check_password_hash(user.password, password):
                 session['user_id'] = user.id
                 session['role'] = user.role
+                session['username'] = user.username
                 return redirect(url_for('main.basic_search'))
             else:
                 flash('Login Failed. Check your username and/or password.')
@@ -48,6 +49,7 @@ def index():
                 db.session.commit()
                 session['user_id'] = new_user.id
                 session['role'] = new_user.role
+                session['username'] = new_user.username
                 return redirect(url_for('main.basic_search'))
     
     return render_template('index.html')
@@ -108,15 +110,71 @@ def results():
 
     return render_template('results.html', jobs=jobs, location_counts=location_counts, grade_counts=grade_counts, job_role_counts=job_role_counts)
 
-@main.route('/user-management')
-@login_required
-def userManagement():
-    return render_template('user-management.html')
 
 @main.route('/advert-management')
 @login_required
 def advertManagement():
     return render_template('advert-management.html')
+
+
+@main.route('/user-management', methods=['GET'])
+@login_required
+def user_management():
+    # Check if the user is an admin
+    if session['role'] == 'Admin':
+        users = User.query.all()  # Fetch all users for admin
+    else:
+        users = [User]  # Fetch only the current user for non-admins
+
+    return render_template('user-management.html', users=users)
+
+@main.route('/user-management/add', methods=['POST'])
+@login_required
+def add_user():
+    if session['role'] != 'Admin':
+        flash('Unauthorised access!', 'danger')
+        return redirect(url_for('main.user_management'))
+
+    username = request.form['username']
+    password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+    role = request.form['role']
+    
+    # Create a new user
+    new_user = User(username=username, password=password, role=role)
+    db.session.add(new_user)
+    db.session.commit()
+    flash('User added successfully!', 'success')
+    return redirect(url_for('main.user_management'))
+
+@main.route('/user-management/edit/<user_id>', methods=['POST'])
+@login_required
+def edit_user(user_id):
+    user = User.query.get_or_404(user_id)
+    
+    if session['role'] == 'Admin':
+        user.username = request.form['username']
+        user.role = request.form['role']
+    
+    # Both admin and user can change password
+    if request.form['password']:
+        user.password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+        
+    db.session.commit()
+    flash('User updated successfully!', 'success')
+    return redirect(url_for('main.user_management'))
+
+@main.route('/user-management/delete/<user_id>', methods=['POST'])
+@login_required
+def delete_user(user_id):
+    if session['role'] != 'Admin':
+        flash('Unauthorised access!', 'danger')
+        return redirect(url_for('main.user_management'))
+
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    flash('User deleted successfully!', 'success')
+    return redirect(url_for('main.user_management'))
 
 @main.route('/health', methods=["GET"])
 def health():
