@@ -31,8 +31,8 @@
             <li class="nav-item {% if request.path == url_for('main.user_management') %}active{% endif %}">
                 <a class="nav-link" href="{{ url_for('main.user_management') }}">User Management</a>
             </li>
-            <li class="nav-item {% if request.path == url_for('main.advertManagement') %}active{% endif %}">
-                <a class="nav-link" href="{{ url_for('main.advertManagement') }}">Advert Management</a>
+            <li class="nav-item {% if request.path == url_for('main.advert_management') %}active{% endif %}">
+                <a class="nav-link" href="{{ url_for('main.advert_management') }}">Advert Management</a>
             </li>
             {% if session.get('user_id') %}
                 <li class="nav-item">

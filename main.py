@@ -113,8 +113,66 @@ def results():
 
 @main.route('/advert-management')
 @login_required
-def advertManagement():
-    return render_template('advert-management.html')
+def advert_management():
+    if session.get('role') != 'Admin':
+        flash('You do not have permission to access this page.', 'danger')
+        return redirect(url_for('main.index'))
+
+    jobs = Job.query.all()
+    return render_template('advert-management.html', jobs=jobs)
+
+@main.route('/advert-management/add', methods=['POST'])
+@login_required
+def add_job():
+    if session['role'] != 'Admin':
+        flash('Unauthorised access!', 'danger')
+        return redirect(url_for('main.advert_management'))
+
+    jobRole = request.form['jobRole']
+    shortDescription = request.form['shortDescription']
+    longDescription = request.form['longDescription']
+    grade = request.form['grade']
+    location = request.form['location']
+    salary = request.form['salary']
+    
+    # Create a new user
+    new_job = Job(jobRole=jobRole, shortDescription=shortDescription, longDescription=longDescription, grade=grade, location=location, salary=salary)
+    db.session.add(new_job)
+    db.session.commit()
+    flash('Job added successfully!', 'success')
+    return redirect(url_for('main.advert_management'))
+
+@main.route('/advert-management/edit/<job_id>', methods=['POST'])
+@login_required
+def edit_job(job_id):
+    if session.get('role') != 'Admin':
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('main.index'))
+
+    job = Job.query.get_or_404(job_id)
+    job.jobRole = request.form['jobRole']
+    job.shortDescription = request.form['shortDescription']
+    job.longDescription = request.form['longDescription']
+    job.grade = request.form['grade']
+    job.location = request.form['location']
+    job.salary = request.form['salary']
+
+    db.session.commit()
+    flash('Job updated successfully!', 'success')
+    return redirect(url_for('main.advert_management'))
+
+@main.route('/advert-management/delete/<job_id>', methods=['POST'])
+@login_required
+def delete_job(job_id):
+    if session.get('role') != 'Admin':
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('main.index'))
+
+    job = Job.query.get_or_404(job_id)
+    db.session.delete(job)
+    db.session.commit()
+    flash('Job deleted successfully!', 'success')
+    return redirect(url_for('main.advert_management'))
 
 
 @main.route('/user-management', methods=['GET'])
@@ -158,7 +216,7 @@ def edit_user(user_id):
     # Both admin and user can change password
     if request.form['password']:
         user.password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
-        
+
     db.session.commit()
     flash('User updated successfully!', 'success')
     return redirect(url_for('main.user_management'))
