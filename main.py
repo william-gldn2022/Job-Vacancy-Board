@@ -5,6 +5,7 @@ from waitress import serve
 from flask_bootstrap import Bootstrap
 import os
 from sqlalchemy import or_
+import re
 
 main = Blueprint('main', __name__)
 
@@ -44,6 +45,14 @@ def index():
                 flash('Username already taken. Please choose a different one.')
             elif password != confirm_password:
                 flash('Passwords do not match.')
+            elif len(password) < 8:
+                flash('Password need to be at least 8 characters long')
+            elif not re.search(r'[A-Z]', password):
+                flash('Password need to contain at least one uppercase letter')
+            elif not re.search(r'[a-z]', password):
+                flash('Password need to contain at least one lowercase letter')
+            elif not re.search(r'[\W_]', password):
+                flash('Password need to contain at least one special character')
             elif role == 'Admin' and admin_password != ADMIN_PASSWORD:
                 flash('Invalid admin password.')
             else:
@@ -225,19 +234,29 @@ def add_user():
         return redirect(url_for('main.user_management'))
 
     username = request.form['username']
-    password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
-    role = request.form['role']
-    
-    existing_user = User.query.filter_by(username=username).first()
-    if existing_user:
-        flash('Username already taken. Please choose a different one.')
+    password = request.form['password']
+    if len(password) < 8:
+        flash('Password need to be at least 8 characters long')
+    elif not re.search(r'[A-Z]', password):
+        flash('Password need to contain at least one uppercase letter')
+    elif not re.search(r'[a-z]', password):
+        flash('Password need to contain at least one lowercase letter')
+    elif not re.search(r'[\W_]', password):
+        flash('Password need to contain at least one special character')
     else:
-        # Create a new user
-        new_user = User(username=username, password=password, role=role)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('User added successfully!', 'success')
-        return redirect(url_for('main.user_management'))
+        password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+        role = request.form['role']
+        
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash('Username already taken. Please choose a different one.')
+        else:
+            # Create a new user
+            new_user = User(username=username, password=password, role=role)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('User added successfully!', 'success')
+            return redirect(url_for('main.user_management'))
 
 @main.route('/user-management/edit/<user_id>', methods=['POST'])
 @login_required
@@ -261,6 +280,14 @@ def edit_user(user_id):
     if request.form['password']:
         if request.form['password'] != request.form['confirm_password']:
             flash('Passwords did not match.')
+        elif len(request.form['password']) < 8:
+            flash('Password need to be at least 8 characters long')
+        elif not re.search(r'[A-Z]', request.form['password']):
+            flash('Password need to contain at least one uppercase letter')
+        elif not re.search(r'[a-z]', request.form['password']):
+            flash('Password need to contain at least one lowercase letter')
+        elif not re.search(r'[\W_]', request.form['password']):
+            flash('Password need to contain at least one special character')
         else:
             user.password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
             db.session.commit()

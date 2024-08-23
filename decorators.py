@@ -1,4 +1,3 @@
-# decorators.py
 from functools import wraps
 from flask import redirect, url_for, session, flash
 
