@@ -5,15 +5,18 @@
         <!-- Filter Column -->
         <div class="col-md-3 filter-column">
             <h5>Filters</h5>
-            <form method="post">
+            <form method="post" action="{{ url_for('main.basic_search') }}">
+                <!-- Search Term (Hidden Field) -->
+                <input type="hidden" name="search" value="{{ request.form.get('search', request.args.get('search', '')) }}">
+
                 <!-- Salary Filter -->
                 <div class="form-group">
                     <label for="minSalary">Minimum Salary:</label>
-                    <input type="number" name="minSalary" class="form-control" id="minSalary" placeholder="e.g. 30000">
+                    <input type="number" name="minSalary" class="form-control" id="minSalary" placeholder="e.g. 30000" value="{{ request.form.get('minSalary', request.args.get('minSalary', '')) }}">
                 </div>
                 <div class="form-group">
                     <label for="maxSalary">Maximum Salary:</label>
-                    <input type="number" name="maxSalary" class="form-control" id="maxSalary" placeholder="e.g. 70000">
+                    <input type="number" name="maxSalary" class="form-control" id="maxSalary" placeholder="e.g. 70000" value="{{ request.form.get('maxSalary', request.args.get('maxSalary', '')) }}">
                 </div>
 
                 <!-- Location Filter -->
@@ -22,7 +25,7 @@
                     {% if location_counts %}
                         {% for location, count in location_counts %}
                         <div class="form-check">
-                            <input type="checkbox" name="locations" value="{{ location }}" class="form-check-input" id="loc-{{ loop.index }}">
+                            <input type="checkbox" name="locations" value="{{ location }}" class="form-check-input" id="loc-{{ loop.index }}" {% if location in request.form.getlist('locations') or location in request.args.getlist('locations') %} checked {% endif %}>
                             <label class="form-check-label" for="loc-{{ loop.index }}">
                                 {{ location }} ({{ count }})
                             </label>
@@ -39,7 +42,7 @@
                     {% if grade_counts %}
                         {% for grade, count in grade_counts %}
                         <div class="form-check">
-                            <input type="checkbox" name="grades" value="{{ grade }}" class="form-check-input" id="grade-{{ loop.index }}">
+                            <input type="checkbox" name="grades" value="{{ grade }}" class="form-check-input" id="grade-{{ loop.index }}" {% if grade in request.form.getlist('grades') or grade in request.args.getlist('grades') %} checked {% endif %}>
                             <label class="form-check-label" for="grade-{{ loop.index }}">
                                 {{ grade }} ({{ count }})
                             </label>
@@ -56,7 +59,7 @@
                     {% if job_role_counts %}
                         {% for role, count in job_role_counts %}
                         <div class="form-check">
-                            <input type="checkbox" name="jobRoles" value="{{ role }}" class="form-check-input" id="role-{{ loop.index }}">
+                            <input type="checkbox" name="jobRoles" value="{{ role }}" class="form-check-input" id="role-{{ loop.index }}" {% if role in request.form.getlist('jobRoles') or role in request.args.getlist('jobRoles') %} checked {% endif %}>
                             <label class="form-check-label" for="role-{{ loop.index }}">
                                 {{ role }} ({{ count }})
                             </label>
@@ -129,4 +132,3 @@
     </div>
 </div>
 {% endblock %}
-

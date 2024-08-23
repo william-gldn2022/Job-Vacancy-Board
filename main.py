@@ -61,16 +61,16 @@ def index():
 @main.route('/basic-search', methods=['GET', 'POST'])
 @login_required
 def basic_search():
-    if request.method == 'POST':
-        # Collecting search inputs
-        search_term = request.form.get('search', '')
-        min_salary = request.form.get('minSalary', None)
-        max_salary = request.form.get('maxSalary', None)
-        selected_locations = request.form.getlist('locations')
-        selected_grades = request.form.getlist('grades')
-        selected_job_roles = request.form.getlist('jobRoles')
+    # Retrieve search term and filters from the request
+    search_term = request.form.get('search', request.args.get('search', ''))
+    min_salary = request.form.get('minSalary', request.args.get('minSalary', None))
+    max_salary = request.form.get('maxSalary', request.args.get('maxSalary', None))
+    selected_locations = request.form.getlist('locations')
+    selected_grades = request.form.getlist('grades')
+    selected_job_roles = request.form.getlist('jobRoles')
 
-        # Get the query object from the search function
+    if request.method == 'POST':
+        # Apply filters based on the form submission
         jobs_query = search_jobs(
             search_term=search_term,
             min_salary=min_salary,
@@ -80,24 +80,51 @@ def basic_search():
             selected_job_roles=selected_job_roles
         )
 
-        # Create a subquery for further filtering
         jobs_subquery = jobs_query.with_entities(Job.id).subquery()
 
-        # Calculate counts based on the filtered jobs only
         location_counts = db.session.query(Job.location, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.location).all()
         grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.grade).all()
         job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.jobRole).all()
 
-        # Execute the query to get the actual jobs
         jobs = jobs_query.all()
 
-        # Render the results page with the filtered jobs and counts
         return render_template('results.html', jobs=jobs, 
                                location_counts=location_counts, 
                                grade_counts=grade_counts, 
-                               job_role_counts=job_role_counts)
-    
-    return render_template('basic-search.html')
+                               job_role_counts=job_role_counts,
+                               search_term=search_term,
+                               min_salary=min_salary,
+                               max_salary=max_salary,
+                               selected_locations=selected_locations,
+                               selected_grades=selected_grades,
+                               selected_job_roles=selected_job_roles)
+
+    # For GET requests, initialize the counts without any filters
+    jobs_query = search_jobs(
+        search_term=search_term,
+        min_salary=min_salary,
+        max_salary=max_salary,
+        selected_locations=selected_locations,
+        selected_grades=selected_grades,
+        selected_job_roles=selected_job_roles
+    )
+
+    jobs_subquery = jobs_query.with_entities(Job.id).subquery()
+
+    location_counts = db.session.query(Job.location, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.location).all()
+    grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.grade).all()
+    job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.jobRole).all()
+
+    return render_template('basic-search.html',
+                           location_counts=location_counts, 
+                           grade_counts=grade_counts, 
+                           job_role_counts=job_role_counts,
+                           search_term=search_term,
+                           min_salary=min_salary,
+                           max_salary=max_salary,
+                           selected_locations=selected_locations,
+                           selected_grades=selected_grades,
+                           selected_job_roles=selected_job_roles)
 
 @main.route('/logout')
 def logout():
