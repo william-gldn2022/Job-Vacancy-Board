@@ -38,7 +38,11 @@ def index():
             role = request.form['role']
             admin_password = request.form.get('admin_password', '')
 
-            if password != confirm_password:
+            # Check if username is already taken
+            existing_user = User.query.filter_by(username=username).first()
+            if existing_user:
+                flash('Username already taken. Please choose a different one.')
+            elif password != confirm_password:
                 flash('Passwords do not match.')
             elif role == 'Admin' and admin_password != ADMIN_PASSWORD:
                 flash('Invalid admin password.')
@@ -135,7 +139,7 @@ def add_job():
     location = request.form['location']
     salary = request.form['salary']
     
-    # Create a new user
+    # Create a new job
     new_job = Job(jobRole=jobRole, shortDescription=shortDescription, longDescription=longDescription, grade=grade, location=location, salary=salary)
     db.session.add(new_job)
     db.session.commit()
@@ -197,12 +201,16 @@ def add_user():
     password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
     role = request.form['role']
     
-    # Create a new user
-    new_user = User(username=username, password=password, role=role)
-    db.session.add(new_user)
-    db.session.commit()
-    flash('User added successfully!', 'success')
-    return redirect(url_for('main.user_management'))
+    existing_user = User.query.filter_by(username=username).first()
+    if existing_user:
+        flash('Username already taken. Please choose a different one.')
+    else:
+        # Create a new user
+        new_user = User(username=username, password=password, role=role)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('User added successfully!', 'success')
+        return redirect(url_for('main.user_management'))
 
 @main.route('/user-management/edit/<user_id>', methods=['POST'])
 @login_required
@@ -210,15 +218,28 @@ def edit_user(user_id):
     user = User.query.get_or_404(user_id)
     
     if session['role'] == 'Admin':
-        user.username = request.form['username']
-        user.role = request.form['role']
-    
+        new_username = request.form['username']
+        new_role = request.form['role']
+
+        # Check if the username is changing and perform the uniqueness check
+        if user.username != new_username:
+            existing_user = User.query.filter_by(username=new_username).first()
+            if existing_user:
+                flash('Username already taken. Please choose a different one.')
+                return redirect(url_for('main.user_management'))
+            user.username = new_username
+        user.role = new_role
+
     # Both admin and user can change password
     if request.form['password']:
-        user.password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+        if request.form['password'] != request.form['confirm_password']:
+            flash('Passwords did not match.')
+        else:
+            user.password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+            db.session.commit()
+            flash('User updated successfully!', 'success')
+            return redirect(url_for('main.user_management'))
 
-    db.session.commit()
-    flash('User updated successfully!', 'success')
     return redirect(url_for('main.user_management'))
 
 @main.route('/user-management/delete/<user_id>', methods=['POST'])
