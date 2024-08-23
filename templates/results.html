@@ -69,6 +69,7 @@
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
             </form>
         </div>
+        
         <!-- Search Results Column -->
         <div class="col-md-9">
             <div class="row justify-content-center">
@@ -81,15 +82,39 @@
                     {% if jobs %}
                         <div class="row">
                             {% for job in jobs %}
-                                <div class="col-lg-6 col-md-6 d-flex align-items-stretch mb-4">
-                                    <div class="card">
-                                        <h5 class="card-header">{{ job.jobRole }}</h5>
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ job.shortDescription }}</h5>
-                                            <p class="card-text"><strong>Grade:</strong> {{ job.grade }}</p>
-                                            <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
-                                            <p class="card-text"><strong>Salary:</strong> £{{ job.salary }}</p>
-                                            <a href="#" class="btn btn-primary card-btn">Go somewhere</a>
+                            <div class="col-lg-6 col-md-6 d-flex align-items-stretch mb-4">
+                                <div class="card">
+                                    <h5 class="card-header">{{ job.jobRole }}</h5>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ job.shortDescription }}</h5>
+                                        <p class="card-text"><strong>Grade:</strong> {{ job.grade }}</p>
+                                        <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
+                                        <p class="card-text"><strong>Salary:</strong> £{{ job.salary }}</p>
+                                        <a data-toggle="modal" data-target="#jobModal-{{ job.id }}" class="btn btn-primary text-white card-btn">More Details</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="jobModal-{{ job.id }}" tabindex="-1" role="dialog" aria-labelledby="jobModalLabel-{{ job.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="jobModalLabel-{{ job.id }}">{{ job.jobRole }}</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5> {{ job.shortDescription }} </h5>
+                                                <p><strong>Salary:</strong> £{{ job.salary }}</p>
+                                                <p><strong>Location:</strong> {{ job.location }}</p>
+                                                <p><strong>Grade:</strong> {{ job.grade }}</p>
+                                                <p><strong>Long Description:</strong> {{ job.longDescription }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <p class="mr-auto">If you'd like to apply for this role, please send your CV to example@email.com, quoting the job advert reference number '{{ job.id }}'.</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -104,3 +129,4 @@
     </div>
 </div>
 {% endblock %}
+

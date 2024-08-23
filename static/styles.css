@@ -16,6 +16,9 @@
     right: 10px;   /* Position 10px from the right */
 }
 
+.text-white {
+    color: white !important;
+}
 
 .d-flex {
     display: flex;
