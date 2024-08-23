@@ -29,6 +29,13 @@
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" name="password" required>
+                <p class="text-muted small text-left" style="font-style: italic;">
+                     Password must contain the following: <br>
+                     - At least 8 characters <br>
+                     - At least one lowercase character <br>
+                     - At least one uppercase character <br>
+                     - At least one special character
+                </p>
             </div>
             <div class="form-group">
                 <label for="confirm_password">Confirm Password</label>
@@ -40,6 +47,11 @@
                     <option value="Regular User">Regular User</option>
                     <option value="Admin">Admin</option>
                 </select>
+                <p class="text-muted small text-left" style="font-style: italic;">
+                    There are two types of roles: <br>
+                    - Regular User: Anyone is eligible for this role. This allows access to the search functionality only. <br>
+                    - Admin: This requires an admin password to be inputted in order to register for this role. This allows access to the full functionality, including record management for users and job adverts. 
+               </p>
             </div>
             <div class="form-group" id="admin-password-field" style="display: none;">
                 <label for="admin_password">Admin Password</label>
