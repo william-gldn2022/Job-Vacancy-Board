@@ -9,6 +9,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(BASEDIR, "instance/job_vacancy_board.db")}'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+# Setting up the app
 def create_app():
     app = Flask(__name__, static_url_path=f"/static")
     with app.app_context():

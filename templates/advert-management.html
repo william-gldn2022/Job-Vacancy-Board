@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
-
 <div class="container mt-5">
     <h2>Advert Management</h2>
     <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addJobModal">Add New Job</button>
+    <!-- Table of all jobs -->
     <div class="table-responsive">
         <table id="jobTable" class="table table-striped">
             <thead>
@@ -101,6 +101,7 @@
         </table>
     </div> 
 </div>
+
 <!-- Add Job Modal -->
 <div class="modal fade" id="addJobModal" tabindex="-1" role="dialog" aria-labelledby="addJobModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

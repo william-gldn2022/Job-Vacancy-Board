@@ -1,6 +1,7 @@
 from functools import wraps
 from flask import redirect, url_for, session, flash
 
+# Controlling the login - decorator used for all webpages except index to ensure user is logged in
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
