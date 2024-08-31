@@ -3,63 +3,75 @@
 <style>
     h4 {text-align: center;}
 </style>
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6">
-        <h4>Welcome! Please login or register for access below!</h4>
-        <h2>Login</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" required>
-                <p class="text-muted small text-left" style="font-style: italic;"> Forgot your password? Contact an administator to reset it.</p>
-            </div>
-            <button type="submit" class="btn btn-primary" name="login">Login</button>
-        </form>
-        <hr>
-        <h2>Register</h2>
-        <form method="POST">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" required>
-                <p class="text-muted small text-left" style="font-style: italic;">
-                     Password must contain the following: <br>
-                     - At least 8 characters <br>
-                     - At least one lowercase character <br>
-                     - At least one uppercase character <br>
-                     - At least one special character
-                </p>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" class="form-control" name="confirm_password" required>
-            </div>
-            <div class="form-group">
-                <label for="role">Role</label>
-                <select name="role" class="form-control" required>
-                    <option value="Regular User">Regular User</option>
-                    <option value="Admin">Admin</option>
-                </select>
-                <p class="text-muted small text-left" style="font-style: italic;">
-                    There are two types of roles: <br>
-                    - Regular User: Anyone is eligible for this role. This allows access to the search functionality only. <br>
-                    - Admin: This requires an admin password to be inputted in order to register for this role. This allows access to the full functionality, including record management for users and job adverts. 
-               </p>
-            </div>
-            <div class="form-group" id="admin-password-field" style="display: none;">
-                <label for="admin_password">Admin Password</label>
-                <input type="password" class="form-control" name="admin_password">
-            </div>
-            <button type="submit" class="btn btn-primary" name="register">Register</button>
-        </form>
-        <br>
+<div class="container mt-5">
+    <!-- Welcome Message Row -->
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h4>Welcome! Please login or register for access below!</h4>
+        </div>
+    </div>
+    
+    <!-- Forms Row -->
+    <div class="row justify-content-center mt-4">
+        <!-- Login Column -->
+        <div class="col-md-6">
+            <h2>Login</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                    <p class="text-muted small text-left" style="font-style: italic;"> Forgot your password? Contact an administrator to reset it.</p>
+                </div>
+                <button type="submit" class="btn btn-primary" name="login">Login</button>
+            </form>
+        </div>
+        
+        <!-- Registration Column -->
+        <div class="col-md-6">
+            <h2>Register</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                    <p class="text-muted small text-left" style="font-style: italic;">
+                         Password must contain the following: <br>
+                         - At least 8 characters <br>
+                         - At least one lowercase character <br>
+                         - At least one uppercase character <br>
+                         - At least one special character
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" class="form-control" name="confirm_password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select name="role" class="form-control" required>
+                        <option value="Regular User">Regular User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                    <p class="text-muted small text-left" style="font-style: italic;">
+                        There are two types of roles: <br>
+                        - Regular User: Anyone is eligible for this role. This allows access to the search functionality only. <br>
+                        - Admin: This requires an admin password to be inputted in order to register for this role. This allows access to the full functionality, including record management for users and job adverts. 
+                   </p>
+                </div>
+                <div class="form-group" id="admin-password-field" style="display: none;">
+                    <label for="admin_password">Admin Password</label>
+                    <input type="password" class="form-control" name="admin_password">
+                </div>
+                <button type="submit" class="btn btn-primary" name="register">Register</button>
+            </form>
+        </div>
     </div>
 </div>
 <script>
