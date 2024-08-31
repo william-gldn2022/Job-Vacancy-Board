@@ -1,28 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
+
 <body>
   <!-- Search screen -->
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
-            <img src="../static/BigLogo.jpg" alt="Logo" height="130">
-            <form method="post">
-                <div class="input-group">
-                  <input type="text" name="search" class="form-control" placeholder="Search...">
-                  <div class="input-group-append">
-                    <button type="submit" class="btn btn-secondary">
-                      <i class="fas fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
-              <p class="text-muted small text-center">
-                Try searching for keywords, job titles, or locations.
-              </p>
-              <p class="text-muted small text-right" style="font-style: italic;">
-                Want to see all the jobs on offer? 
-                <a href="{{ url_for('main.results', show_all=True) }}">Click here!</a>
-            </p>
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+      <img src="../static/BigLogo.jpg" alt="Logo" height="130">
+      <form method="post">
+        <div class="input-group">
+          <input type="text" name="search" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-secondary">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
         </div>
+      </form>
+      <p class="text-muted small text-center">
+        Try searching for keywords, job titles, or locations.
+      </p>
+      <p class="text-muted small text-right" style="font-style: italic;">
+        Want to see all the jobs on offer?
+        <a href="{{ url_for('main.results', show_all=True) }}">Click here!</a>
+      </p>
     </div>
+  </div>
 </body>
 {% endblock %}

@@ -7,32 +7,37 @@
             <h5>Filters</h5>
             <form method="post" action="{{ url_for('main.basic_search') }}">
                 <!-- Search Term (Hidden Field) -->
-                <input type="hidden" name="search" value="{{ request.form.get('search', request.args.get('search', '')) }}">
+                <input type="hidden" name="search"
+                    value="{{ request.form.get('search', request.args.get('search', '')) }}">
 
                 <!-- Salary Filter -->
                 <div class="form-group">
                     <label for="minSalary">Minimum Salary:</label>
-                    <input type="number" name="minSalary" class="form-control" id="minSalary" placeholder="e.g. 30000" value="{{ request.form.get('minSalary', request.args.get('minSalary', '')) }}">
+                    <input type="number" name="minSalary" class="form-control" id="minSalary" placeholder="e.g. 30000"
+                        value="{{ request.form.get('minSalary', request.args.get('minSalary', '')) }}">
                 </div>
                 <div class="form-group">
                     <label for="maxSalary">Maximum Salary:</label>
-                    <input type="number" name="maxSalary" class="form-control" id="maxSalary" placeholder="e.g. 70000" value="{{ request.form.get('maxSalary', request.args.get('maxSalary', '')) }}">
+                    <input type="number" name="maxSalary" class="form-control" id="maxSalary" placeholder="e.g. 70000"
+                        value="{{ request.form.get('maxSalary', request.args.get('maxSalary', '')) }}">
                 </div>
 
                 <!-- Location Filter -->
                 <div class="form-group">
                     <label>Location:</label>
                     {% if location_counts %}
-                        {% for location, count in location_counts %}
-                        <div class="form-check">
-                            <input type="checkbox" name="locations" value="{{ location }}" class="form-check-input" id="loc-{{ loop.index }}" {% if location in request.form.getlist('locations') or location in request.args.getlist('locations') %} checked {% endif %}>
-                            <label class="form-check-label" for="loc-{{ loop.index }}">
-                                {{ location }} ({{ count }})
-                            </label>
-                        </div>
-                        {% endfor %}
+                    {% for location, count in location_counts %}
+                    <div class="form-check">
+                        <input type="checkbox" name="locations" value="{{ location }}" class="form-check-input"
+                            id="loc-{{ loop.index }}" {% if location in request.form.getlist('locations') or location in
+                            request.args.getlist('locations') %} checked {% endif %}>
+                        <label class="form-check-label" for="loc-{{ loop.index }}">
+                            {{ location }} ({{ count }})
+                        </label>
+                    </div>
+                    {% endfor %}
                     {% else %}
-                        <p style="font-style: italic;">No filter found</p>
+                    <p style="font-style: italic;">No filter found</p>
                     {% endif %}
                 </div>
 
@@ -40,16 +45,18 @@
                 <div class="form-group">
                     <label>Grade:</label>
                     {% if grade_counts %}
-                        {% for grade, count in grade_counts %}
-                        <div class="form-check">
-                            <input type="checkbox" name="grades" value="{{ grade }}" class="form-check-input" id="grade-{{ loop.index }}" {% if grade in request.form.getlist('grades') or grade in request.args.getlist('grades') %} checked {% endif %}>
-                            <label class="form-check-label" for="grade-{{ loop.index }}">
-                                {{ grade }} ({{ count }})
-                            </label>
-                        </div>
-                        {% endfor %}
+                    {% for grade, count in grade_counts %}
+                    <div class="form-check">
+                        <input type="checkbox" name="grades" value="{{ grade }}" class="form-check-input"
+                            id="grade-{{ loop.index }}" {% if grade in request.form.getlist('grades') or grade in
+                            request.args.getlist('grades') %} checked {% endif %}>
+                        <label class="form-check-label" for="grade-{{ loop.index }}">
+                            {{ grade }} ({{ count }})
+                        </label>
+                    </div>
+                    {% endfor %}
                     {% else %}
-                        <p style="font-style: italic;">No filter found</p>
+                    <p style="font-style: italic;">No filter found</p>
                     {% endif %}
                 </div>
 
@@ -57,74 +64,80 @@
                 <div class="form-group">
                     <label>Job Role:</label>
                     {% if job_role_counts %}
-                        {% for role, count in job_role_counts %}
-                        <div class="form-check">
-                            <input type="checkbox" name="jobRoles" value="{{ role }}" class="form-check-input" id="role-{{ loop.index }}" {% if role in request.form.getlist('jobRoles') or role in request.args.getlist('jobRoles') %} checked {% endif %}>
-                            <label class="form-check-label" for="role-{{ loop.index }}">
-                                {{ role }} ({{ count }})
-                            </label>
-                        </div>
-                        {% endfor %}
+                    {% for role, count in job_role_counts %}
+                    <div class="form-check">
+                        <input type="checkbox" name="jobRoles" value="{{ role }}" class="form-check-input"
+                            id="role-{{ loop.index }}" {% if role in request.form.getlist('jobRoles') or role in
+                            request.args.getlist('jobRoles') %} checked {% endif %}>
+                        <label class="form-check-label" for="role-{{ loop.index }}">
+                            {{ role }} ({{ count }})
+                        </label>
+                    </div>
+                    {% endfor %}
                     {% else %}
-                        <p style="font-style: italic;">No filter found</p>
+                    <p style="font-style: italic;">No filter found</p>
                     {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
             </form>
         </div>
-        
+
         <!-- Search results column put into cards -->
         <div class="col-md-9">
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <h2>Search Results</h2>
                     <p class="text-muted small text-left" style="font-style: italic;">
-                        Not quite the results you were looking for? 
+                        Not quite the results you were looking for?
                         <a href="{{ url_for('main.basic_search') }}">Click here</a> to go back to the Search Page.
                     </p>
                     {% if jobs %}
-                        <div class="row">
-                            {% for job in jobs %}
-                            <div class="col-lg-6 col-md-6 d-flex align-items-stretch mb-4">
-                                <div class="card">
-                                    <h5 class="card-header">{{ job.jobRole }}</h5>
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ job.shortDescription }}</h5>
-                                        <p class="card-text"><strong>Grade:</strong> {{ job.grade }}</p>
-                                        <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
-                                        <p class="card-text"><strong>Salary:</strong> £{{ job.salary }}</p>
-                                        <a data-toggle="modal" data-target="#jobModal-{{ job.id }}" class="btn btn-primary text-white card-btn">More Details</a>
+                    <div class="row">
+                        {% for job in jobs %}
+                        <div class="col-lg-6 col-md-6 d-flex align-items-stretch mb-4">
+                            <div class="card">
+                                <h5 class="card-header">{{ job.jobRole }}</h5>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ job.shortDescription }}</h5>
+                                    <p class="card-text"><strong>Grade:</strong> {{ job.grade }}</p>
+                                    <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
+                                    <p class="card-text"><strong>Salary:</strong> £{{ job.salary }}</p>
+                                    <a data-toggle="modal" data-target="#jobModal-{{ job.id }}"
+                                        class="btn btn-primary text-white card-btn">More Details</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="jobModal-{{ job.id }}" tabindex="-1" role="dialog"
+                            aria-labelledby="jobModalLabel-{{ job.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="jobModalLabel-{{ job.id }}">{{ job.jobRole }}</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h5> {{ job.shortDescription }} </h5>
+                                        <p><strong>Salary:</strong> £{{ job.salary }}</p>
+                                        <p><strong>Location:</strong> {{ job.location }}</p>
+                                        <p><strong>Grade:</strong> {{ job.grade }}</p>
+                                        <p><strong>Long Description:</strong> {{ job.longDescription }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <p class="mr-auto">If you'd like to apply for this role, please send your CV to
+                                            example@email.com, quoting the job advert reference number '{{ job.id }}'.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="jobModal-{{ job.id }}" tabindex="-1" role="dialog" aria-labelledby="jobModalLabel-{{ job.id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title" id="jobModalLabel-{{ job.id }}">{{ job.jobRole }}</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <h5> {{ job.shortDescription }} </h5>
-                                                <p><strong>Salary:</strong> £{{ job.salary }}</p>
-                                                <p><strong>Location:</strong> {{ job.location }}</p>
-                                                <p><strong>Grade:</strong> {{ job.grade }}</p>
-                                                <p><strong>Long Description:</strong> {{ job.longDescription }}</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <p class="mr-auto">If you'd like to apply for this role, please send your CV to example@email.com, quoting the job advert reference number '{{ job.id }}'.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
                         </div>
+                        {% endfor %}
+                    </div>
                     {% else %}
-                        <p>No jobs found matching your criteria.</p>
+                    <p>No jobs found matching your criteria.</p>
                     {% endif %}
                 </div>
             </div>

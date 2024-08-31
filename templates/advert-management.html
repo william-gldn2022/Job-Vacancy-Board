@@ -31,10 +31,12 @@
                         <button class="btn" data-toggle="modal" data-target="#editJobModal-{{ job.id }}">
                             <i class="fas fa-edit"></i>
                         </button>
-                        
+
                         <!-- Delete Form -->
-                        <form method="post" action="{{ url_for('main.delete_job', job_id=job.id) }}" style="display:inline;">
-                            <button type="submit" class="btn" onclick="return confirm('Are you sure you want to delete this job?');">
+                        <form method="post" action="{{ url_for('main.delete_job', job_id=job.id) }}"
+                            style="display:inline;">
+                            <button type="submit" class="btn"
+                                onclick="return confirm('Are you sure you want to delete this job?');">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -42,7 +44,8 @@
                 </tr>
 
                 <!-- Edit Job Modal -->
-                <div class="modal fade" id="editJobModal-{{ job.id }}" tabindex="-1" role="dialog" aria-labelledby="editJobModalLabel-{{ job.id }}" aria-hidden="true">
+                <div class="modal fade" id="editJobModal-{{ job.id }}" tabindex="-1" role="dialog"
+                    aria-labelledby="editJobModalLabel-{{ job.id }}" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -55,37 +58,51 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="jobRole">Job Title:</label>
-                                        <input type="text" class="form-control" name="jobRole" value="{{ job.jobRole }}" required>
+                                        <input type="text" class="form-control" name="jobRole" value="{{ job.jobRole }}"
+                                            required>
                                     </div>
                                     <div class="form-group">
                                         <label for="shortDescription">Short Description:</label>
-                                        <textarea class="form-control" name="shortDescription" required>{{ job.shortDescription }}</textarea>
+                                        <textarea class="form-control" name="shortDescription"
+                                            required>{{ job.shortDescription }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="longDescription">Long Description:</label>
-                                        <textarea class="form-control" name="longDescription" required>{{ job.longDescription }}</textarea>
+                                        <textarea class="form-control" name="longDescription"
+                                            required>{{ job.longDescription }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="grade">Grade:</label>
                                         <select class="form-control" name="grade" required>
-                                            <option value="Grade A" {% if job.grade == 'Grade A' %}selected{% endif %}>Grade A</option>
-                                            <option value="Grade B" {% if job.grade == 'Grade B' %}selected{% endif %}>Grade B</option>
-                                            <option value="Grade C" {% if job.grade == 'Grade C' %}selected{% endif %}>Grade C</option>
-                                            <option value="Grade D" {% if job.grade == 'Grade D' %}selected{% endif %}>Grade D</option>
-                                            <option value="Grade E" {% if job.grade == 'Grade E' %}selected{% endif %}>Grade E</option>
+                                            <option value="Grade A" {% if job.grade=='Grade A' %}selected{% endif %}>
+                                                Grade A</option>
+                                            <option value="Grade B" {% if job.grade=='Grade B' %}selected{% endif %}>
+                                                Grade B</option>
+                                            <option value="Grade C" {% if job.grade=='Grade C' %}selected{% endif %}>
+                                                Grade C</option>
+                                            <option value="Grade D" {% if job.grade=='Grade D' %}selected{% endif %}>
+                                                Grade D</option>
+                                            <option value="Grade E" {% if job.grade=='Grade E' %}selected{% endif %}>
+                                                Grade E</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="location">Location:</label>
                                         <select class="form-control" name="location" required>
-                                            <option value="London" {% if job.location == 'London' %}selected{% endif %}>London</option>
-                                            <option value="Manchester" {% if job.location == 'Manchester' %}selected{% endif %}>Manchester</option>
-                                            <option value="Winchester" {% if job.location == 'Winchester' %}selected{% endif %}>Winchester</option>
-                                            <option value="York" {% if job.location == 'York' %}selected{% endif %}>York</option>                                        </select>
+                                            <option value="London" {% if job.location=='London' %}selected{% endif %}>
+                                                London</option>
+                                            <option value="Manchester" {% if job.location=='Manchester' %}selected{%
+                                                endif %}>Manchester</option>
+                                            <option value="Winchester" {% if job.location=='Winchester' %}selected{%
+                                                endif %}>Winchester</option>
+                                            <option value="York" {% if job.location=='York' %}selected{% endif %}>York
+                                            </option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="salary">Salary (£):</label>
-                                        <input type="number" class="form-control" name="salary" value="{{ job.salary }}" required>
+                                        <input type="number" class="form-control" name="salary" value="{{ job.salary }}"
+                                            required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -99,11 +116,12 @@
                 {% endfor %}
             </tbody>
         </table>
-    </div> 
+    </div>
 </div>
 
 <!-- Add Job Modal -->
-<div class="modal fade" id="addJobModal" tabindex="-1" role="dialog" aria-labelledby="addJobModalLabel" aria-hidden="true">
+<div class="modal fade" id="addJobModal" tabindex="-1" role="dialog" aria-labelledby="addJobModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -130,37 +148,37 @@
                         <div class="form-group">
                             <label for="grade">Grade:</label>
                             <select class="form-control" name="grade" required>
-                                <option value="Grade A" >Grade A</option>
-                                <option value="Grade B" >Grade B</option>
-                                <option value="Grade C" >Grade C</option>
-                                <option value="Grade D" >Grade D</option>
-                                <option value="Grade E" >Grade E</option>
+                                <option value="Grade A">Grade A</option>
+                                <option value="Grade B">Grade B</option>
+                                <option value="Grade C">Grade C</option>
+                                <option value="Grade D">Grade D</option>
+                                <option value="Grade E">Grade E</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="location">Location:</label>
                             <select class="form-control" name="location" required>
-                                <option value="London" >London</option>
-                                <option value="Manchester" >Manchester</option>
-                                <option value="Winchester" >Winchester</option>
-                                <option value="York" >York</option>
+                                <option value="London">London</option>
+                                <option value="Manchester">Manchester</option>
+                                <option value="Winchester">Winchester</option>
+                                <option value="York">York</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="salary">Salary (£):</label>
                             <input type="number" class="form-control" name="salary" required>
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Job</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Job</button>
+                    </div>
             </form>
         </div>
     </div>
 </div>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#jobTable').DataTable({
             "paging": true,
             "searching": true,
