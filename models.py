@@ -1,4 +1,3 @@
-# models.py
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
@@ -12,6 +11,7 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(50), nullable=False)
 
+
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jobRole = db.Column(db.String(100), nullable=False)
@@ -20,5 +20,3 @@ class Job(db.Model):
     salary = db.Column(db.Integer, nullable=False)
     location = db.Column(db.String(50), nullable=False)
     grade = db.Column(db.String(20), nullable=False)
-    
-

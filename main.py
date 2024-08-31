@@ -20,9 +20,9 @@ ADMIN_PASSWORD = 'makemeadmin'
 def index():
     if 'user_id' in session:
         return redirect(url_for('main.basic_search'))
-    
+
     if request.method == 'POST':
-        #Login process
+        # Login process
         if 'login' in request.form:
             username = request.form['username']
             password = request.form['password']
@@ -34,7 +34,7 @@ def index():
                 return redirect(url_for('main.basic_search'))
             else:
                 flash('Login Failed. Check your username and/or password.')
-        #Register process
+        # Register process
         elif 'register' in request.form:
             username = request.form['username']
             password = request.form['password']
@@ -59,9 +59,10 @@ def index():
             elif role == 'Admin' and admin_password != ADMIN_PASSWORD:
                 flash('Invalid admin password.')
             else:
-                hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-                new_user = User(username=username, 
-                                password=hashed_password, 
+                hashed_password = bcrypt.generate_password_hash(
+                    password).decode('utf-8')
+                new_user = User(username=username,
+                                password=hashed_password,
                                 role=role)
                 db.session.add(new_user)
                 db.session.commit()
@@ -69,16 +70,19 @@ def index():
                 session['role'] = new_user.role
                 session['username'] = new_user.username
                 return redirect(url_for('main.basic_search'))
-    
+
     return render_template('index.html')
+
 
 @main.route('/basic-search', methods=['GET', 'POST'])
 @login_required
 def basic_search():
     # Retrieve search term and filters from the request
     search_term = request.form.get('search', request.args.get('search', ''))
-    min_salary = request.form.get('minSalary', request.args.get('minSalary', None))
-    max_salary = request.form.get('maxSalary', request.args.get('maxSalary', None))
+    min_salary = request.form.get(
+        'minSalary', request.args.get('minSalary', None))
+    max_salary = request.form.get(
+        'maxSalary', request.args.get('maxSalary', None))
     selected_locations = request.form.getlist('locations')
     selected_grades = request.form.getlist('grades')
     selected_job_roles = request.form.getlist('jobRoles')
@@ -95,15 +99,18 @@ def basic_search():
 
         jobs_subquery = jobs_query.with_entities(Job.id).subquery()
 
-        location_counts = db.session.query(Job.location, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.location).all()
-        grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.grade).all()
-        job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.jobRole).all()
+        location_counts = db.session.query(Job.location, db.func.count(Job.id)).filter(
+            Job.id.in_(jobs_subquery)).group_by(Job.location).all()
+        grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).filter(
+            Job.id.in_(jobs_subquery)).group_by(Job.grade).all()
+        job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).filter(
+            Job.id.in_(jobs_subquery)).group_by(Job.jobRole).all()
 
         jobs = jobs_query.all()
 
-        return render_template('results.html', jobs=jobs, 
-                               location_counts=location_counts, 
-                               grade_counts=grade_counts, 
+        return render_template('results.html', jobs=jobs,
+                               location_counts=location_counts,
+                               grade_counts=grade_counts,
                                job_role_counts=job_role_counts,
                                search_term=search_term,
                                min_salary=min_salary,
@@ -123,13 +130,16 @@ def basic_search():
 
     jobs_subquery = jobs_query.with_entities(Job.id).subquery()
 
-    location_counts = db.session.query(Job.location, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.location).all()
-    grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.grade).all()
-    job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).filter(Job.id.in_(jobs_subquery)).group_by(Job.jobRole).all()
+    location_counts = db.session.query(Job.location, db.func.count(Job.id)).filter(
+        Job.id.in_(jobs_subquery)).group_by(Job.location).all()
+    grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).filter(
+        Job.id.in_(jobs_subquery)).group_by(Job.grade).all()
+    job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).filter(
+        Job.id.in_(jobs_subquery)).group_by(Job.jobRole).all()
 
     return render_template('basic-search.html',
-                           location_counts=location_counts, 
-                           grade_counts=grade_counts, 
+                           location_counts=location_counts,
+                           grade_counts=grade_counts,
                            job_role_counts=job_role_counts,
                            search_term=search_term,
                            min_salary=min_salary,
@@ -138,7 +148,7 @@ def basic_search():
                            selected_grades=selected_grades,
                            selected_job_roles=selected_job_roles)
 
-#Route for logging out - will end session so cannot access any other pages other that index.html
+# Route for logging out - will end session so cannot access any other pages other that index.html
 @main.route('/logout')
 def logout():
     session.clear()
@@ -149,14 +159,17 @@ def logout():
 @login_required
 def results():
     jobs = Job.query.all()
-    location_counts = db.session.query(Job.location, db.func.count(Job.id)).group_by(Job.location).all()
-    grade_counts = db.session.query(Job.grade, db.func.count(Job.id)).group_by(Job.grade).all()
-    job_role_counts = db.session.query(Job.jobRole, db.func.count(Job.id)).group_by(Job.jobRole).all()
+    location_counts = db.session.query(
+        Job.location, db.func.count(Job.id)).group_by(Job.location).all()
+    grade_counts = db.session.query(
+        Job.grade, db.func.count(Job.id)).group_by(Job.grade).all()
+    job_role_counts = db.session.query(
+        Job.jobRole, db.func.count(Job.id)).group_by(Job.jobRole).all()
 
-    return render_template('results.html', 
-                           jobs=jobs, 
-                           location_counts=location_counts, 
-                           grade_counts=grade_counts, 
+    return render_template('results.html',
+                           jobs=jobs,
+                           location_counts=location_counts,
+                           grade_counts=grade_counts,
                            job_role_counts=job_role_counts)
 
 # Route to show adverts in a table, only accessable to admin
@@ -170,7 +183,7 @@ def advert_management():
     jobs = Job.query.all()
     return render_template('advert-management.html', jobs=jobs)
 
-#Route to add a new job advert
+# Route to add a new job advert
 @main.route('/advert-management/add', methods=['POST'])
 @login_required
 def add_job():
@@ -184,20 +197,20 @@ def add_job():
     grade = request.form['grade']
     location = request.form['location']
     salary = request.form['salary']
-    
+
     # Creates the new job and commits to database
-    new_job = Job(jobRole=jobRole, 
-                  shortDescription=shortDescription, 
-                  longDescription=longDescription, 
-                  grade=grade, 
-                  location=location, 
+    new_job = Job(jobRole=jobRole,
+                  shortDescription=shortDescription,
+                  longDescription=longDescription,
+                  grade=grade,
+                  location=location,
                   salary=salary)
     db.session.add(new_job)
     db.session.commit()
     flash('Job added successfully!', 'success')
     return redirect(url_for('main.advert_management'))
 
-#Edits exisiting job based on job id
+# Edits exisiting job based on job id
 @main.route('/advert-management/edit/<job_id>', methods=['POST'])
 @login_required
 def edit_job(job_id):
@@ -213,12 +226,12 @@ def edit_job(job_id):
     job.location = request.form['location']
     job.salary = request.form['salary']
 
-    #Existing job details updated and recommited to database
+    # Existing job details updated and recommited to database
     db.session.commit()
     flash('Job updated successfully!', 'success')
     return redirect(url_for('main.advert_management'))
 
-#Route to delete job
+# Route to delete job
 @main.route('/advert-management/delete/<job_id>', methods=['POST'])
 @login_required
 def delete_job(job_id):
@@ -232,7 +245,7 @@ def delete_job(job_id):
     flash('Job deleted successfully!', 'success')
     return redirect(url_for('main.advert_management'))
 
-#Route to show all users to an admin as a table
+# Route to show all users to an admin as a table
 @main.route('/user-management', methods=['GET'])
 @login_required
 def user_management():
@@ -244,7 +257,7 @@ def user_management():
 
     return render_template('user-management.html', users=users)
 
-#Route to add user to database
+# Route to add user to database
 @main.route('/user-management/add', methods=['POST'])
 @login_required
 def add_user():
@@ -263,28 +276,29 @@ def add_user():
     elif not re.search(r'[\W_]', password):
         flash('Password need to contain at least one special character')
     else:
-        password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+        password = bcrypt.generate_password_hash(
+            request.form['password']).decode('utf-8')
         role = request.form['role']
-        
+
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash('Username already taken. Please choose a different one.')
         else:
             # Creates the new user and commits details to the database
-            new_user = User(username=username, 
-                            password=password, 
+            new_user = User(username=username,
+                            password=password,
                             role=role)
             db.session.add(new_user)
             db.session.commit()
             flash('User added successfully!', 'success')
             return redirect(url_for('main.user_management'))
 
-#Edits a pre-existing users details
+# Edits a pre-existing users details
 @main.route('/user-management/edit/<user_id>', methods=['POST'])
 @login_required
 def edit_user(user_id):
     user = User.query.get_or_404(user_id)
-    
+
     if session['role'] == 'Admin':
         new_username = request.form['username']
         new_role = request.form['role']
@@ -311,14 +325,15 @@ def edit_user(user_id):
         elif not re.search(r'[\W_]', request.form['password']):
             flash('Password need to contain at least one special character')
         else:
-            user.password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+            user.password = bcrypt.generate_password_hash(
+                request.form['password']).decode('utf-8')
             db.session.commit()
             flash('User updated successfully!', 'success')
             return redirect(url_for('main.user_management'))
 
     return redirect(url_for('main.user_management'))
 
-#Deletes an existing user
+# Deletes an existing user
 @main.route('/user-management/delete/<user_id>', methods=['POST'])
 @login_required
 def delete_user(user_id):
@@ -333,18 +348,18 @@ def delete_user(user_id):
     return redirect(url_for('main.user_management'))
 
 
-#Health route for render deployment
+# Health route for render deployment
 @main.route('/health', methods=["GET"])
 def health():
-    return {"Status":"Live"}, 200
+    return {"Status": "Live"}, 200
 
 
-#Searching function
-def search_jobs(search_term='', 
-                min_salary=None, 
-                max_salary=None, 
-                selected_locations=None, 
-                selected_grades=None, 
+# Searching function
+def search_jobs(search_term='',
+                min_salary=None,
+                max_salary=None,
+                selected_locations=None,
+                selected_grades=None,
                 selected_job_roles=None):
     query = Job.query.filter(
         or_(
