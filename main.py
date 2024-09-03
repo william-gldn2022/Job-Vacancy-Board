@@ -322,3 +322,7 @@ def delete_user(user_id):
     db.session.commit()
     flash('User deleted successfully!', 'success')
     return redirect(url_for('main.user_management'))
+
+@main.route('/health', methods=["GET"])
+def health():
+    return {'Status': 'Live'}, 200
