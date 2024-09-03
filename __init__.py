@@ -10,8 +10,12 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Setting up the app
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__, static_url_path=f"/static")
+    if test_config is not None:
+        app.config.update(test_config)
+    else:
+        app.config.from_object(Config)
     with app.app_context():
         from main import main
         app.register_blueprint(main)
