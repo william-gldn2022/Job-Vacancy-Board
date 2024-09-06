@@ -17,6 +17,9 @@ To run locally:
 ## To host on a server
 By running server.py, by using a hosting service, the application will be deployable. Currently, the application is hosted on Render, using a free tier. 
 
+## To run the automated tests
+```COMMAND ```
+
 ## Dependancies 
 All packagaes used are listed within the requirements.txt file.
 As such, this web-app is built using Flask. The UI is built using HTML and Bootstrap. The database is an SQLite database, containing two unrelated tables.
