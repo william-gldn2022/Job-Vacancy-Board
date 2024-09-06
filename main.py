@@ -10,7 +10,7 @@ import re
 app = Flask(__name__)
 Bootstrap(app)
 
-ADMIN_PASSWORD = 'makemeadmin'
+ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
 
 # Blueprint Registration
 main = Blueprint('main', __name__)
