@@ -13,7 +13,7 @@ class BaseTestCase(unittest.TestCase):
             'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
             'SECRET_KEY': 'test_secret_key',
             'WTF_CSRF_ENABLED': False,
-            'SERVER_NAME': 'localhost:5000'  # Add SERVER_NAME
+            'SERVER_NAME': 'localhost:5000'
         })
         self.client = self.app.test_client()
         self.app_context = self.app.app_context()
@@ -50,8 +50,8 @@ class TestModels(BaseTestCase):
             shortDescription="Develop software",
             longDescription="Develop and maintain software",
             salary=60000,
-            location="New York",
-            grade="Senior"
+            location="London",
+            grade="Grade A"
         )
         db.session.add(job)
         db.session.commit()
@@ -72,8 +72,8 @@ class TestViews(BaseTestCase):
     def test_login(self):
         """Test user login functionality."""
         # First, create a user in the database using bcrypt to hash the password
-        hashed_password = bcrypt.generate_password_hash("password").decode('utf-8')
-        user = User(username="testuser", password=hashed_password, role="User")
+        hashed_password = bcrypt.generate_password_hash("Password1!").decode('utf-8')
+        user = User(username="testuser", password=hashed_password, role="Regular User")
         db.session.add(user)
         db.session.commit()
 
@@ -81,7 +81,7 @@ class TestViews(BaseTestCase):
             # Attempt to login with the created user
             response = self.client.post(url_for('main.index'), data=dict(
                 username='testuser',
-                password='password',
+                password='Password1!',
                 login='Login'
             ), follow_redirects=True)
 
@@ -109,7 +109,7 @@ class TestUserRegistration(BaseTestCase):
                 username='newuser',
                 password='Valid1Password!',
                 confirm_password='Valid1Password!',
-                role='User',
+                role='Regular User',
                 register='Register'  # Simulate the register button being pressed
             ), follow_redirects=True)
             
@@ -125,7 +125,7 @@ class TestUserRegistration(BaseTestCase):
         """Test that duplicate usernames cannot be registered."""
         with self.app.test_request_context():
             # Create a user in the database
-            user = User(username="duplicateuser", password=bcrypt.generate_password_hash("password").decode('utf-8'), role="User")
+            user = User(username="duplicateuser", password=bcrypt.generate_password_hash("Password1!").decode('utf-8'), role="Regular User")
             db.session.add(user)
             db.session.commit()
 
@@ -134,7 +134,7 @@ class TestUserRegistration(BaseTestCase):
                 username='duplicateuser',
                 password='Valid1Password!',
                 confirm_password='Valid1Password!',
-                role='User',
+                role='Regular User',
                 register='Register'
             ), follow_redirects=True)
             
@@ -202,8 +202,8 @@ class TestJobManagement(BaseTestCase):
                 jobRole='Test Engineer',
                 shortDescription='Testing software',
                 longDescription='Detailed description for Test Engineer position.',
-                grade='Mid-level',
-                location='Remote',
+                grade='Grade A',
+                location='London',
                 salary=70000
             ), follow_redirects=True)
 
@@ -221,7 +221,7 @@ class TestJobManagement(BaseTestCase):
         db.session.commit()
 
         # Add a job to the database
-        job = Job(jobRole='Developer', shortDescription='Develop software', longDescription='Detailed description for Developer', grade='Junior', location='NY', salary=60000)
+        job = Job(jobRole='Developer', shortDescription='Develop software', longDescription='Detailed description for Developer', grade='Grade B', location='York', salary=60000)
         db.session.add(job)
         db.session.commit()
 
@@ -236,8 +236,8 @@ class TestJobManagement(BaseTestCase):
                 jobRole='Updated Developer',
                 shortDescription='Develop software',
                 longDescription='Updated description for Developer',
-                grade='Junior',
-                location='NY',
+                grade='Grade B',
+                location='York',
                 salary=65000
             ), follow_redirects=True)
 
@@ -284,8 +284,8 @@ class TestSearchFunctionality(BaseTestCase):
         db.session.commit()
 
         # Add jobs to the database
-        job1 = Job(jobRole='Backend Developer', shortDescription='Backend work', longDescription='Develop backend systems', grade='Senior', location='New York', salary=120000)
-        job2 = Job(jobRole='Frontend Developer', shortDescription='Frontend work', longDescription='Develop frontend interfaces', grade='Junior', location='San Francisco', salary=80000)
+        job1 = Job(jobRole='Backend Developer', shortDescription='Backend work', longDescription='Develop backend systems', grade='Grade B', location='York', salary=120000)
+        job2 = Job(jobRole='Frontend Developer', shortDescription='Frontend work', longDescription='Develop frontend interfaces', grade='Grade A', location='Manchester', salary=80000)
         db.session.add_all([job1, job2])
         db.session.commit()
 
