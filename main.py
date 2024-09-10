@@ -251,10 +251,6 @@ def delete_job(job_id):
 @main.route('/user-management')
 @login_required
 def user_management():
-    if session.get('role') != 'Admin':
-        flash('You do not have permission to access this page.', 'danger')
-        return redirect(url_for('main.index'))
-
     users = User.query.all()
     return render_template('user-management.html', users=users)
 
