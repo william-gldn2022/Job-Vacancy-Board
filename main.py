@@ -251,6 +251,7 @@ def delete_job(job_id):
 @main.route('/user-management')
 @login_required
 def user_management():
+    
     users = User.query.all()
     return render_template('user-management.html', users=users)
 
