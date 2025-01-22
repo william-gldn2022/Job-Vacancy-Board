@@ -100,7 +100,7 @@ jobs:
       - name: Install OWASP ZAP from the official GitHub release
         run: |
           wget https://github.com/zaproxy/zaproxy/releases/download/v2.16.0/ZAP_2.16.0_Linux.tar.gz
-          tar -xvzf ZAP_2.16.0_unix.tar.gz
+          tar -xvzf ZAP_2.16.0_Linux.tar.gz
           sudo mv ZAP_2.16.0 /opt/zaproxy
           sudo ln -s /opt/zaproxy/zap.sh /usr/local/bin/zap
 
