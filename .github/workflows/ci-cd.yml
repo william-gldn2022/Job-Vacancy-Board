@@ -99,17 +99,16 @@ jobs:
       # Install OWASP ZAP from the official GitHub release
       - name: Install OWASP ZAP from the official GitHub release
         run: |
-          wget https://github.com/zaproxy/zaproxy/archive/refs/tags/v2.16.0.tar.gz
-          ls -alh
-          tar -xvzf v2.16.0.tar.gz
-          ls -alh 
-          sudo mv zaproxy-2.16.0 /opt/zaproxy
+          wget https://github.com/zaproxy/zaproxy/releases/download/v2.16.0/ZAP_2.16.0_Linux.tar.gz
+          tar -xvzf ZAP_2.16.0_unix.tar.gz
+          sudo mv ZAP_2.16.0 /opt/zaproxy
           sudo ln -s /opt/zaproxy/zap.sh /usr/local/bin/zap
+
 
       # Start the application (e.g., Flask or another app)
       - name: Start the application (e.g., Flask)
         run: |
-          nohup python3 -m flask run --host=0.0.0.0 --port=5000 &
+          nohup python -m flask --app server --debug run &
 
       # Run OWASP ZAP Baseline Scan for Injection Vulnerabilities
       - name: Run OWASP ZAP Scan for Injection Vulnerabilities
