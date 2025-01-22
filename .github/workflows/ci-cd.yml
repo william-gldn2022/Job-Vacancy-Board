@@ -96,6 +96,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
@@ -129,5 +134,3 @@ jobs:
       - name: Clean up Docker Compose
         run: |
           docker-compose down
-
-
