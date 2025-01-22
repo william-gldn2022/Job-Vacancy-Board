@@ -125,6 +125,11 @@ jobs:
         run: |
           /opt/zaproxy/zap.sh -cmd -quickurl http://localhost:5000 -quickout ./zap-injection-report.html || true
 
+      # List files in the directory to ensure the report exists
+      - name: List files in the current directory
+        run: |
+          ls -alh
+
       # Upload ZAP Injection Report
       - name: Upload ZAP Injection Report
         uses: actions/upload-artifact@v3
