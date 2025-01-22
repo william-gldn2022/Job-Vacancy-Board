@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  # Test job to run unittest
-  test:
+  # Unit tests job
+  PyTests:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,6 +27,49 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests with unittest
+      - name: Run unit tests
         run: |
           python -m unittest discover tests/
+
+  # Security vulnerability tests job
+  SecurityVulnerabilityTests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run Bandit for static analysis
+      - name: Static Code Analysis with Bandit
+        run: |
+          pip install bandit
+          bandit -r .
+
+      # Run SQLMap for SQL injection detection
+      - name: SQL Injection Test with SQLMap
+        run: |
+          apt-get update && apt-get install -y sqlmap
+          sqlmap -u http://localhost:5000/search?q=test --batch || true
+
+      # Run OWASP ZAP for dynamic security testing
+      - name: Dynamic Security Testing with OWASP ZAP
+        run: |
+          docker pull owasp/zap2docker-stable
+          docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t http://localhost:5000 -r zap_report.html
+
+      # Upload OWASP ZAP Report (optional)
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: zap-report
+          path: zap_report.html
