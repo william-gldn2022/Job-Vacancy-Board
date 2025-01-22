@@ -31,24 +31,28 @@ jobs:
         run: |
           python -m unittest discover -s tests -p "test_*.py"
 
-    # Deploy job to Render
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-    if: success()  # Only deploy if the test job is successful
+    deploy:
+  runs-on: ubuntu-latest
+  needs: test
+  if: success()
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Render CLI
-        run: |
-          npm install -g render-cli
+    - name: Set up Render CLI
+      run: |
+        curl -fsSL https://cdn.render.com/cli/installer.sh | bash
+        export PATH="$HOME/.render/bin:$PATH"
 
-      - name: Login to Render
-        run: |
-          render login --api-key ${{ secrets.RENDER_API_KEY }}
+    - name: Verify Render CLI installation
+      run: |
+        render --version
 
-      - name: Deploy to Render
-        run: |
-          render deploy --service Job-Vacancy-Board
+    - name: Login to Render
+      run: |
+        render login --api-key ${{ secrets.RENDER_API_KEY }}
+
+    - name: Deploy to Render
+      run: |
+        render deploy --service Job-Vacancy-Board
