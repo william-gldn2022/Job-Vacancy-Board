@@ -65,29 +65,6 @@ jobs:
           name: bandit-report
           path: bandit-report.txt
 
-  # Injection vulnerability tests using OWASP ZAP
-  InjectionTests:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up OWASP ZAP
-        run: |
-          sudo apt update
-          sudo apt install -y zaproxy
-
-      - name: Run OWASP ZAP Scan for Injection vulnerabilities
-        run: |
-          zap-baseline.py -t http://localhost:5000 -g gen.conf -r zap-report.html || true
-
-      - name: Upload ZAP Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: zap-report
-          path: zap-report.html
-
   # Broken Access Control Tests using OWASP ZAP
   BrokenAccessControlTests:
     runs-on: ubuntu-latest
@@ -110,3 +87,29 @@ jobs:
         with:
           name: zap-bac-report
           path: zap-bac-report.html
+
+  # OWASP ZAP for injection vulnerabilities
+    InjectionTests:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+      # Run OWASP ZAP for injection vulnerabilities (snap installation)
+      name: Install Snap and ZAP
+      run: |
+          sudo apt update
+          sudo apt install -y snapd
+          sudo snap install zaproxy
+
+      name: Run OWASP ZAP Scan for Injection vulnerabilities
+      run: |
+          zap-baseline.py -t http://localhost:5000 -g gen.conf -r zap-report.html || true  # Ignore ZAP failures
+
+      # Upload ZAP Report
+      name: Upload ZAP Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: zap-report
+        path: zap-report.html
