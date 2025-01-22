@@ -89,28 +89,46 @@ jobs:
           path: zap-bac-report.html
 
   # OWASP ZAP for injection vulnerabilities
-  InjectionTests:
-    runs-on: ubuntu-latest
+  # Injection Vulnerabilities using OWASP ZAP and zaproxy/zap-stable
+InjectionTests:
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
 
-      - name: Run OWASP ZAP Scan for Injection vulnerabilities using zaproxy/zap-stable Docker image
-        run: |
-          # Pull the latest ZAP Docker image
-          docker pull zaproxy/zap-stable:latest
-          
-          # Run ZAP baseline scan for injection vulnerabilities
-          docker run --rm -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable:latest zap-baseline.py -t http://localhost:5000 -g gen.conf -r zap-report.html || true
+    - name: Set up Docker Compose
+      run: |
+        echo "version: '3.8'
+        services:
+          app:
+            image: your_app_image
+            ports:
+              - "5000:5000"
+          zap:
+            image: zaproxy/zap-stable:latest
+            command: zap-baseline.py -t http://app:5000 -g gen.conf -r zap-report.html
+            depends_on:
+              - app
+            network_mode: host" > docker-compose.yml
+        docker-compose up -d
 
-      - name: Upload ZAP Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: zap-report
-          path: zap-report.html
+    - name: Run OWASP ZAP Scan for Injection vulnerabilities using zaproxy/zap-stable Docker image
+      run: |
+        docker-compose up -d
+        docker-compose exec zap bash -c "zap-baseline.py -t http://app:5000 -g gen.conf -r zap-report.html || true"
+
+    - name: Upload ZAP Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: zap-report
+        path: zap-report.html
+
+    - name: Clean up Docker Compose
+      run: |
+        docker-compose down
 
 
