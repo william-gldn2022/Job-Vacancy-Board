@@ -89,6 +89,7 @@ jobs:
           path: zap-bac-report.html
 
   # OWASP ZAP for injection vulnerabilities
+  # OWASP ZAP for injection vulnerabilities
   InjectionTests:
     runs-on: ubuntu-latest
 
@@ -101,10 +102,15 @@ jobs:
 
       - name: Run OWASP ZAP Scan for Injection vulnerabilities using Docker
         run: |
-          docker run --rm -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-baseline.py -t http://localhost:5000 -g gen.conf -r zap-report.html || true
+          # Ensure the latest ZAP Docker image is pulled
+          docker pull owasp/zap2docker-stable:latest
+          
+          # Run the ZAP baseline scan
+          docker run --rm -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable:latest zap-baseline.py -t http://localhost:5000 -g gen.conf -r zap-report.html || true
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v3
         with:
           name: zap-report
           path: zap-report.html
+
