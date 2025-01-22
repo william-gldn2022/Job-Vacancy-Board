@@ -101,7 +101,7 @@ jobs:
         run: |
           wget https://github.com/zaproxy/zaproxy/archive/refs/tags/v2.16.0.tar.gz
           ls -alh
-          tar -xvzf ZAP_2.16.0_unix.tar.gz
+          tar -xvzf v2.16.0.tar.gz
           sudo mv ZAP_2.16.0 /opt/zaproxy
           sudo ln -s /opt/zaproxy/zap.sh /usr/local/bin/zap
 
