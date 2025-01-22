@@ -1,0 +1,164 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Test job to run unittest
+  PyTests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests with unittest
+        run: |
+          python -m unittest discover tests/
+
+  # Identification and Authorisation tests using Bandit
+  IdentifcationAuthorisationTests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install Bandit
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit
+
+      - name: Run Bandit for Vulnerability Scanning
+        run: |
+          bandit -r . --output bandit-report.txt --format txt || true
+
+      - name: Analyze Bandit Results
+        run: |
+          if grep -q "Issue:" bandit-report.txt; then
+            echo "Vulnerabilities found, but continuing pipeline..."
+          fi
+
+      - name: Upload Bandit Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: bandit-report
+          path: bandit-report.txt
+
+  # Broken Access Control Tests using OWASP ZAP
+  BrokenAccessControlTests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies from requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Start Flask App
+        run: |
+          nohup python3 -m flask --app server --debug run --host=0.0.0.0 --port=5000 &
+          sleep 10  # Wait for the server to start
+
+      - name: Test Flask App Accessibility
+        run: |
+          curl -v http://localhost:5000  # Verify that the server is accessible
+
+      - name: Install ZAP from GitHub Release
+        run: |
+          wget https://github.com/zaproxy/zaproxy/releases/download/v2.16.0/ZAP_2.16.0_Linux.tar.gz
+          tar -xvzf ZAP_2.16.0_Linux.tar.gz
+          sudo mv ZAP_2.16.0 /opt/zaproxy
+          sudo ln -s /opt/zaproxy/zap.sh /usr/local/bin/zap
+
+      - name: Run ZAP Scan for Broken Access Control
+        run: |
+          /opt/zaproxy/zap.sh -cmd -quickurl http://localhost:5000 -quickout /opt/zaproxy/zap-bac-report.html || true
+
+      - name: Verify Report Location
+        run: |
+          echo "Checking /opt/zaproxy directory for the report:"
+          ls -alh /opt/zaproxy
+
+      - name: Upload ZAP Broken Access Control Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-bac-report
+          path: /opt/zaproxy/zap-bac-report.html
+          if-no-files-found: warn
+
+
+  # Injection Vulnerabilities Tests using OWASP ZAP
+  InjectionTests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies from requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Ensure all dependencies are installed
+
+      # Run Flask Application
+      - name: Start Flask App
+        run: |
+          nohup python3 -m flask --app server --debug run --host=0.0.0.0 --port=5000 &
+
+      - name: Wait for the server to be fully up and running
+        run: |
+          sleep 10
+
+      # Install ZAP
+      - name: Install ZAP from GitHub Release
+        run: |
+          wget https://github.com/zaproxy/zaproxy/releases/download/v2.16.0/ZAP_2.16.0_Linux.tar.gz
+          tar -xvzf ZAP_2.16.0_Linux.tar.gz
+          sudo mv ZAP_2.16.0 /opt/zaproxy
+          sudo ln -s /opt/zaproxy/zap.sh /usr/local/bin/zap
+
+      # Run OWASP ZAP Scan for Injection vulnerabilities with a writable directory
+      - name: Run ZAP Scan for Injection vulnerabilities
+        run: |
+          /opt/zaproxy/zap.sh -cmd -quickurl http://localhost:5000 -quickout ./zap-injection-report.html || true
+
+      - name: Verify Report Location
+        run: |
+          echo "Checking /opt/zaproxy directory for the report:"
+          ls -alh /opt/zaproxy
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: zap-injection-report
+          path: /opt/zaproxy/zap-injection-report.html
+          if-no-files-found: warn
