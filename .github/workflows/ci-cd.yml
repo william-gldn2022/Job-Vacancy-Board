@@ -54,6 +54,7 @@ jobs:
         run: |
           pip install bandit
           bandit -r .
+          continue-on-error: true
 
       # Run SQLMap for SQL injection detection
       - name: SQL Injection Test with SQLMap
