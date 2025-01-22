@@ -120,10 +120,10 @@ jobs:
           sudo mv ZAP_2.16.0 /opt/zaproxy
           sudo ln -s /opt/zaproxy/zap.sh /usr/local/bin/zap
 
-      # Run OWASP ZAP Scan for Injection vulnerabilities
+      # Run OWASP ZAP Scan for Injection vulnerabilities with a writable directory
       - name: Run ZAP Scan for Injection vulnerabilities
         run: |
-          /opt/zaproxy/zap.sh -cmd -quickurl http://localhost:5000 -quickout zap-injection-report.html || true
+          /opt/zaproxy/zap.sh -cmd -quickurl http://localhost:5000 -quickout ./zap-injection-report.html || true
 
       # Upload ZAP Injection Report
       - name: Upload ZAP Injection Report
