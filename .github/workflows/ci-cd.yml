@@ -31,7 +31,7 @@ jobs:
         run: |
           python -m unittest discover -s tests -p "test_*.py"
 
-  # Deploy job to Render
+    # Deploy job to Render
   deploy:
     runs-on: ubuntu-latest
     needs: test
@@ -43,13 +43,12 @@ jobs:
 
       - name: Set up Render CLI
         run: |
-          curl -fsSL https://render.com/cli/install.sh | bash
-          export PATH="$HOME/.render/bin:$PATH"
-        
+          npm install -g render-cli
+
       - name: Login to Render
-        run: render login --api-key ${{ secrets.RENDER_API_KEY }} 
+        run: |
+          render login --api-key ${{ secrets.RENDER_API_KEY }}
 
       - name: Deploy to Render
         run: |
           render deploy --service Job-Vacancy-Board
-
