@@ -29,7 +29,7 @@ jobs:
 
       - name: Run tests with pytest
         run: |
-          pytest test/  # Assuming your tests are in a folder named "test"
+          pytest tests/
 
   # Deploy job to Render
   deploy:
@@ -47,7 +47,7 @@ jobs:
           export PATH="$HOME/.render/bin:$PATH"
         
       - name: Login to Render
-        run: render login --api-key ${{ secrets.RENDER_API_KEY }}  # Add RENDER_API_KEY to GitHub secrets
+        run: render login --api-key ${{ secrets.RENDER_API_KEY }} 
 
       - name: Deploy to Render
         run: |
