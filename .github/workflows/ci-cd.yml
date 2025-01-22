@@ -102,7 +102,8 @@ jobs:
           wget https://github.com/zaproxy/zaproxy/archive/refs/tags/v2.16.0.tar.gz
           ls -alh
           tar -xvzf v2.16.0.tar.gz
-          sudo mv ZAP_2.16.0 /opt/zaproxy
+          ls -alh 
+          sudo mv zaproxy-2.16.0 /opt/zaproxy
           sudo ln -s /opt/zaproxy/zap.sh /usr/local/bin/zap
 
       # Start the application (e.g., Flask or another app)
