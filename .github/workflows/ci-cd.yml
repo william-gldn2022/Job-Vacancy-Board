@@ -32,7 +32,7 @@ jobs:
           flake8 . --count --show-source --statistics --output-file=flake8-report.txt || true
 
       - name: Upload Linting Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: flake8-lint-report
           path: flake8-report.txt
