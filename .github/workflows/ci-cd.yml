@@ -91,7 +91,7 @@ jobs:
           fi
 
       - name: Upload Bandit Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bandit-report
           path: bandit-report.txt
@@ -141,7 +141,7 @@ jobs:
           ls -alh /opt/zaproxy
 
       - name: Upload ZAP Broken Access Control Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: zap-bac-report
           path: /opt/zaproxy/zap-bac-report.html
@@ -189,7 +189,7 @@ jobs:
           ls -alh /opt/zaproxy
 
       - name: Upload ZAP Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: zap-injection-report
           path: /opt/zaproxy/zap-injection-report.html
